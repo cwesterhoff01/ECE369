@@ -76,6 +76,7 @@ module TopLevel(Clk,Rst,PCCheck,WriteDataCheck,HICheck,LOCheck);
     Mux32Bit4To1 jumpMux(BranchMuxResult,{PCOutput[31:28],IFIDOut[57:32],2'b00},RegData1,{PCOutput[31:28],IFIDOut[57:32],2'b00},Jump,PCInput);
     ProgramCounter PC(WritePC,PCInput,PCOutput,Clk,Rst);
     Adder PCAdd(PCOutput,32'd4,PCAddResult);
+    //Change instruction memory to output two instructions
     InstructionMemory IM(PCOutput,Instruction,Rst);
     //change pipeline registers
     RegisterIFID IFID(WriteIFID,branch,{Instruction,PCAddResult},IFIDOut,Clk,Rst);
