@@ -22,11 +22,11 @@
 
 module RegisterMEMWB(WriteReg,NewData,Data,Clk,Rst);
     input WriteReg,Clk,Rst;
-    input [104:0] NewData;
-    output reg [104:0] Data;
+    input [109:0] NewData;
+    output reg [109:0] Data;
     always @(posedge Clk or posedge Rst) begin
         if(Rst==1)
-            Data <= 105'b0;
+            Data <= 110'b0;
         else if(WriteReg==1)
             Data <= NewData;
         else

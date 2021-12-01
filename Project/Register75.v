@@ -22,11 +22,11 @@
 
 module RegisterEXMEM(WriteReg,NewData,Data,Clk,Rst);
     input WriteReg,Clk,Rst;
-    input [108:0] NewData;
-    output reg [108:0] Data;
+    input [145:0] NewData;
+    output reg [145:0] Data;
     always @(posedge Clk or posedge Rst) begin
         if(Rst==1)
-            Data <= 109'b0; 
+            Data <= 146'b0; 
         else if(WriteReg==1)
             Data <= NewData;
         else

@@ -22,11 +22,11 @@
 
 module RegisterIDEX(WriteReg,NewData,Data,Clk,Rst);
     input WriteReg,Clk,Rst;
-    input [162:0] NewData;
-    output reg [162:0] Data;
+    input [268:0] NewData;
+    output reg [268:0] Data;
     always @(posedge Clk or posedge Rst) begin
         if(Rst==1)
-            Data <= 163'b0;
+            Data <= 269'b0;
         else if(WriteReg==1)
             Data <= NewData;
         else
