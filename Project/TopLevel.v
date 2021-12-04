@@ -12,6 +12,28 @@
 //
 
 /*
+ControlBits
+[0] - RegWrite
+[1] - RegDst
+[5:2] - ALUOp
+[6] - ALUSrc
+
+ControlBits2
+[0] - MemToReg
+[1] - MemRead
+[2] - MemWrite
+[4:3] - AddressType
+
+ControlMuxOutput
+[0] - RegWrite
+[1] - MemToReg
+[2] - MemRead
+[3] - MemWrite
+[5:4] - AddressType
+[6] - RegDst
+[10:7] - ALUOp
+[11] - ALUSrc
+
 IFID
 [31:00] - PC+4
 [63:32] - Instruction2
@@ -106,7 +128,7 @@ module TopLevel(Clk,Rst,PCCheck,WriteDataCheck,HICheck,LOCheck);
 	SignExtender SE1(IFIDOut[79:64],Immediate1);
 	SignExtender SE2(IFIDOut[47:32],Immediate2);
 	
-	//HazardDetectionUnit HDU(IFIDOut[57:53],IFIDOut[52:48],RdMuxOutput,EXMEMOut[74:70],ControlBits[6],IDEXOut[0],EXMEMOut[0],MEMWBOut[70:66],MEMWBOut[0],WritePC,WriteIFID,WriteControl);
+	HazardDetectionUnit HDU(ControlBits[1],ControlBits2[2],IDEXOut[0],IDEXOut[2],EXMEMOut[2],branch,IFIDOut[89:85],IFIDOut[84:80],IFIDOut[57:53],IFIDOut[52:48],IDEXOut[268:264],IDEXOut[258:254],EXMEMOut[111:107],WritePC,WriteIFID,WriteControl);
     Controller control(IFIDOut[95:64],IFIDOut[63:32],equalVal,gtZero,ltZero,beqz,ControlBits,ControlBits2,Jump,PCSrc, branch);
     Mux32Bit4To1 compMux1(ReadData1,MEMWBOut[33:2],EXMEMOut[37:6],MEMWBOut[65:34],ForwardD,compMux1Output);
     Mux32Bit4To1 compMux2(ReadData2,MEMWBOut[33:2],EXMEMOut[37:6],MEMWBOut[65:34],ForwardE,compMux2Output);

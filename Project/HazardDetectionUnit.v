@@ -1,20 +1,20 @@
 `timescale 1ns / 1ps
-module HazardDetectionUnit(IFIDRs,IFIDRt,EXRd,EXMEMRd,IFIDRegWrite,IFIDRegDst,IDEXRegWrite,EXMEMRegWrite,MEMWBRd,MEMWBRegWrite,PCWrite,IFIDWrite,ControlWrite);
-    input [4:0] IFIDRs,IFIDRt,EXRd,EXMEMRd,MEMWBRd;
-    input IFIDRegWrite,IDEXRegWrite,EXMEMRegWrite,MEMWBRegWrite,IFIDRegDst;
+module HazardDetectionUnit(IFIDRegDst,IFIDMemWrite,IDEXRegWrite,IDEXMemRead,EXMEMMemRead,branch,IFIDRs,IFIDRt,IFIDRs2,IFIDRt2,IDEXRt2,IDEXRd,EXMEMRd2,PCWrite,IFIDWrite,ControlWrite);
+    input [4:0] IFIDRs,IFIDRt,IFIDRs2,IFIDRt2,IDEXRt2,IDEXRd,EXMEMRd2;
+    input IFIDRegDst,IFIDMemWrite,IDEXRegWrite,IDEXMemRead,EXMEMMemRead,branch;
     output reg PCWrite,IFIDWrite,ControlWrite;
     always @(*) begin
-        if(IDEXRegWrite==1 && EXRd!=0 && ((EXRd==IFIDRs) || ((IFIDRegDst==1 || IFIDRegWrite==0) && EXRd==IFIDRt))) begin
+        if(IDEXMemRead==1 && IDEXRt2!=0 && (IDEXRt2==IFIDRs || (IDEXRt2==IFIDRt && IFIDRegDst==1) || IDEXRt2==IFIDRs2 || (IDEXRt2==IFIDRt2 && IFIDMemWrite==1))) begin
             PCWrite = 0;
             IFIDWrite = 0;
             ControlWrite = 0;
         end
-        else if(EXMEMRegWrite==1 && EXMEMRd!=0 && ((EXMEMRd==IFIDRs) || ((IFIDRegDst==1 || IFIDRegWrite==0) && EXMEMRd==IFIDRt))) begin
+        else if(branch && EXMEMMemRead==1 && EXMEMRd2!=0 && (EXMEMRd2==IFIDRs || (EXMEMRd2==IFIDRt && IFIDRegDst==1))) begin
             PCWrite = 0;
             IFIDWrite = 0;
             ControlWrite = 0;
         end
-        else if(MEMWBRegWrite==1 && MEMWBRd!=0 && ((MEMWBRd==IFIDRs) || ((IFIDRegDst==1 || IFIDRegWrite==0) && MEMWBRd==IFIDRt))) begin
+        else if(branch && IDEXRegWrite==1 && IDEXRd!=0 && (IDEXRd==IFIDRs || (IDEXRd==IFIDRt && IFIDRegDst==1))) begin
             PCWrite = 0;
             IFIDWrite = 0;
             ControlWrite = 0;
