@@ -66,7 +66,7 @@ IDEX
 [12:0] - Control Bits
 [44:13] - PC+4
 [76:45] - ReadData1
-[110:77] - ReadData2
+[108:77] - ReadData2
 [140:109] - ReadData3
 [172:141] - ReadData4
 [204:173] - Immediate1
@@ -118,7 +118,7 @@ module TopLevel(Clk,Rst,PCCheck,WriteDataCheck,HICheck,LOCheck);
 	wire [268:0] IDEXOut;
 	wire [145:0] EXMEMOut;
 	wire [109:0] MEMWBOut;
-    Mux32Bit2To1 branchMux(BranchAddress,PCAddResult,branch,branchMuxOutput);
+    Mux32Bit2To1 branchMux(PCAddResult,BranchAddress,branch,branchMuxOutput);
     Mux32Bit4To1 jumpMux(branchMuxOutput,{PCOutput[31:28],IFIDOut[89:64],2'b00},ReadData1,{PCOutput[31:28],IFIDOut[89:64],2'b00},Jump,PCInput);
 	ProgramCounter PC(WritePC,PCInput,PCOutput,Clk,Rst);
 	Adder PCAdder(PCOutput,32'd8,PCAddResult);
@@ -140,7 +140,7 @@ module TopLevel(Clk,Rst,PCCheck,WriteDataCheck,HICheck,LOCheck);
   //RegisterIDEX IDEX(1'b1,{Rt2,Rs2,Rd1,Rt1,Rs1,Shamt1,Jump,Immediate2,Immediate1,ReadData4,ReadData3,ReadData2,ReadData1,PC+4,ControlMuxOutput},IDEXOut,Clk,Rst);
 	RegisterIDEX IDEX(1'b1,{IFIDOut[52:48],IFIDOut[57:53],IFIDOut[79:75],IFIDOut[84:80],IFIDOut[89:85],IFIDOut[74:70],Jump,Immediate2,Immediate1,ReadData4,ReadData3,ReadData2,ReadData1,IFIDOut[31:0],ControlMuxOutput},IDEXOut,Clk,Rst);
 	
-	Mux32Bit2To1 ALU1Mux1(IDEXOut[253:249],IDEXOut[204:173],IDEXOut[12],ALU1Mux1Output);
+	Mux32Bit2To1 ALU1Mux1(IDEXOut[108:77],IDEXOut[204:173],IDEXOut[12],ALU1Mux1Output);
 	Mux32Bit4To1 ALU1Mux2(IDEXOut[76:45],MEMWBOut[33:2],EXMEMOut[37:6],MEMWBOut[65:34],FORWARDA,ALU1Mux2Output);
 	Mux32Bit4To1 ALU1Mux3(ALU1Mux1Output,MEMWBOut[33:2],EXMEMOut[37:6],MEMWBOut[65:34],FORWARDB,ALU1Mux3Output);
 	Mux32Bit4To1 ALU2Mux(ReadData4,EXMEMOut[37:6],MEMWBOut[33:2],MEMWBOut[65:34],FORWARDC,ALU2MuxOutput);

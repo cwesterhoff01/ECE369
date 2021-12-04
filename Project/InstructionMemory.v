@@ -12,7 +12,7 @@ module InstructionMemory(Address, Instruction, Instruction2, rst);
     end
         always @(*) begin
         Instruction = memory[Address[12:2]];
-        Instruction2 = memory[Address[12:2]+4];
+        Instruction2 = memory[Address[12:2]+1];
     end
     always @(posedge rst) begin
         if (rst == 1) begin
