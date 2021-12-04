@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
-module Controller(Instruction,Instruction2,equalVal,gtZero,ltZero,beqz,ControlBits,ControlBits2,Jump,PCSrc, branch);
+module Controller(Instruction,Instruction2,equalVal,gtZero,ltZero,beqz,either,lt,ControlBits,ControlBits2,Jump,PCSrc, branch);
 
 input [31:0] Instruction,Instruction2;
-input equalVal, gtZero, ltZero, beqz;
+input equalVal, gtZero, ltZero, beqz, either, lt;
 output reg [7:0] ControlBits; //{ALUSrc,ALUOp[4:0],RegDst,RegWrite}
 output reg [4:0] ControlBits2; //AddressType[1:0],MemWrite,MemRead,MemToReg
 output reg [1:0] Jump;
@@ -457,6 +457,11 @@ always @(*) begin
 					Jump = 2'b00;
                     PCSrc = 0; branch = 0;
                     ControlBits = {1'b0,5'b01101,1'b1,1'b1};
+				end
+				6'b111111: begin //subAbs
+				    Jump = 2'b00;
+				    PCSrc = 0; branch = 0;
+				    ControlBits = {1'b0,5'b00000,1'b1,1'b1};
 				end
 				default: begin
                     /*RegDst  = 1;
@@ -948,7 +953,34 @@ always @(*) begin
                     ControlBits = {1'b0,5'b00000,1'b0,1'b0};
                 end
 			endcase
-		end	
+		end
+		6'b010000: begin //blt
+		    Jump = 2'b00;
+		    branch = 1;
+		    if(lt==1)
+		      PCSrc = 1;
+		    else
+		      PCSrc = 0;
+		    ControlBits = {1'b0,5'b00000,1'b1,1'b0};
+		end
+		6'b010001: begin //bge
+		    Jump = 2'b00;
+		    branch = 1;
+		    if(lt==0)
+		      PCSrc = 1;
+		    else
+		      PCSrc = 0;
+		    ControlBits = {1'b0,5'b00000,1'b1,1'b0};
+		end
+		6'b010010: begin //bnr
+		    Jump = 2'b00;
+		    branch = 1;
+		    if(either==0)
+		      PCSrc = 1;
+		    else
+		      PCSrc = 0;
+		    ControlBits = {1'b0,5'b00000,1'b1,1'b0};
+		end
 		default: begin
 			/*RegDst  = 1;
 			ALUSrc  = 0;

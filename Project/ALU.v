@@ -29,6 +29,16 @@ module ALU(A, B, ALUControl, Shamt, HI, LO, ALUResult, Zero,Clk,Rst);
     /* Please fill in the implementation here... */
     always @(*) begin
     case(ALUControl)
+    5'b00000: begin //sub then absolute value
+            if($signed(A)-$signed(B)<0)
+                ALUResult = $signed(B)-$signed(A);
+            else
+                ALUResult = $signed(A)-$signed(B);
+            temp = 0;
+            highOutput = 0;
+            lowOutput = 0;
+            trigger = 0;
+    end
     5'b00001: begin //add signed
             ALUResult = $signed(A) + $signed(B);  
             temp = 0;

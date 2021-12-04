@@ -20,13 +20,15 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Comparator(A,B,eq,gtz,ltz,beqz);
+module Comparator(A,B,eq,gtz,ltz,beqz,either,lt);
     input signed [31:0] A,B;
-    output reg eq,gtz,ltz,beqz;
+    output reg eq,gtz,ltz,beqz,either,lt;
     always @(*) begin
         eq = A==B;
         gtz = A>0;
         ltz = A<0;
         beqz = B==0;
+        lt = A<B;
+        either = A | B;
     end
 endmodule
