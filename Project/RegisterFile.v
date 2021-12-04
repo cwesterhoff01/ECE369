@@ -38,7 +38,7 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
         registers[5'b11010] <= 0;
         registers[5'b11011] <= 0;
         registers[5'b11100] <= 0;
-        registers[5'b11101] <= 0;
+        registers[5'b11101] <= 32'd16000;
         registers[5'b11110] <= 0;
         registers[5'b11111] <= 0;
 	end
@@ -79,7 +79,7 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
             registers[5'b11010] <= 0;
             registers[5'b11011] <= 0;
             registers[5'b11100] <= 0;
-            registers[5'b11101] <= 0;
+            registers[5'b11101] <= 32'd16000;
             registers[5'b11110] <= 0;
             registers[5'b11111] <= 0;
         end

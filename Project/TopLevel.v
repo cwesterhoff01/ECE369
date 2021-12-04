@@ -141,11 +141,11 @@ module TopLevel(Clk,Rst,PCCheck,WriteDataCheck,HICheck,LOCheck);
 	RegisterIDEX IDEX(1'b1,{IFIDOut[52:48],IFIDOut[57:53],IFIDOut[79:75],IFIDOut[84:80],IFIDOut[89:85],IFIDOut[74:70],Jump,Immediate2,Immediate1,ReadData4,ReadData3,ReadData2,ReadData1,IFIDOut[31:0],ControlMuxOutput},IDEXOut,Clk,Rst);
 	
 	Mux32Bit2To1 ALU1Mux1(IDEXOut[108:77],IDEXOut[204:173],IDEXOut[12],ALU1Mux1Output);
-	Mux32Bit4To1 ALU1Mux2(IDEXOut[76:45],MEMWBOut[33:2],EXMEMOut[37:6],MEMWBOut[65:34],FORWARDA,ALU1Mux2Output);
-	Mux32Bit4To1 ALU1Mux3(ALU1Mux1Output,MEMWBOut[33:2],EXMEMOut[37:6],MEMWBOut[65:34],FORWARDB,ALU1Mux3Output);
-	Mux32Bit4To1 ALU2Mux(ReadData4,EXMEMOut[37:6],MEMWBOut[33:2],MEMWBOut[65:34],FORWARDC,ALU2MuxOutput);
+	Mux32Bit4To1 ALU1Mux2(IDEXOut[76:45],MEMWBOut[33:2],EXMEMOut[37:6],MEMWBOut[65:34],ForwardA,ALU1Mux2Output);
+	Mux32Bit4To1 ALU1Mux3(ALU1Mux1Output,MEMWBOut[33:2],EXMEMOut[37:6],MEMWBOut[65:34],ForwardB,ALU1Mux3Output);
+	Mux32Bit4To1 ALU2Mux(ReadData4,EXMEMOut[37:6],MEMWBOut[33:2],MEMWBOut[65:34],ForwardC,ALU2MuxOutput);
 	Mux5Bit2To1 DestMux(IDEXOut[253:249],IDEXOut[258:254],IDEXOut[6],DestMuxOutput);
-	
+  //ALU(          A,             B,        ALUControl,    Shamt,            HI,        LO, ALUResult, Zero,Clk,Rst)
 	ALU alu1(ALU1Mux2Output,ALU1Mux3Output,IDEXOut[11:7],IDEXOut[243:239],HIOutput,LOOutput,ALUResult1,Zero1,Clk,Rst);
 	ALU alu2(ALU2MuxOutput,IDEXOut[236:205],5'b00001,5'b0,HIOutput2,LOOutput2,ALUResult2,Zero2,Clk,Rst);
   //ForwardingUnit(EXMEMRegWrite, MEMWBRegWrite, MEMWBMemToReg, branch, IFIDRs, IFIDRt,       IDEXRs,           IDEXRt,          IDEXRs2,        EXMEMRd,          MEMWBRd,        MEMWBRd2,       ForwardA,ForwardB,ForwardC,ForwardD,ForwardE)
