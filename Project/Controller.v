@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
-module Controller(Instruction,Instruction2,equalVal,gtZero,ltZero,beqz,either,lt,ControlBits,ControlBits2,Jump,PCSrc, branch);
+module Controller(Instruction,Instruction2,equalVal,gtZero,ltZero,beqz,either,lt,even,ControlBits,ControlBits2,Jump,PCSrc, branch);
 
 input [31:0] Instruction,Instruction2;
-input equalVal, gtZero, ltZero, beqz, either, lt;
+input equalVal, gtZero, ltZero, beqz, either, lt,even;
 output reg [7:0] ControlBits; //{ALUSrc,ALUOp[4:0],RegDst,RegWrite}
 output reg [4:0] ControlBits2; //AddressType[1:0],MemWrite,MemRead,MemToReg
 output reg [1:0] Jump;
@@ -983,6 +983,15 @@ always @(*) begin
 		    else
 		      PCSrc = 0;
 		    ControlBits = {1'b0,5'b00000,1'b1,1'b0};
+		end
+		6'b010011: begin //beven
+		    Jump = 2'b00;
+		    branch = 1;
+		    if(even==1)
+		      PCSrc = 1;
+		    else
+		      PCSrc = 0;
+		    ControlBits = {1'b0,5'b00000,1'b0,1'b0};
 		end
 		default: begin
 			/*RegDst  = 1;

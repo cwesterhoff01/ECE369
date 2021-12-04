@@ -202,7 +202,7 @@ SADColLoop:
 	nop
 	lw		$t0,0($t0)	
 	
-	subAbs		$t0,$t6,$t0			#Maybe convert to subAbs
+	subAbs		$t0,$t6,$t0
 	nop
 	
 	add		$v0,$v0,$t0	
@@ -257,10 +257,44 @@ moveWindow:
 	
 	
 	
-	bge $s1, $s3, moveRight
+	beven $s2, evenRow
+	nop
+	
+	nop				#Branch Delay
+	nop
+	
+	
+	
+	bgtz $s1, moveLeft
+	nop
+	
+	nop				#Branch Delay
+	nop
+	
+	
+	
+	j	moveDown
 	nop
 	
 	nop			#Branch Delay
+	nop
+	
+	
+	
+	evenRow:
+	
+	blt $s1, $s3, moveRight
+	nop
+	
+	nop			#Branch Delay
+	nop
+	
+	
+	
+	j	moveDown
+	nop
+	
+	nop					#Branch Delay
 	nop
 	
 	
@@ -292,6 +326,23 @@ moveRight:
    
    add	$v1, $0, $0 		#Branch Delay
    nop
+   
+   
+   
+moveLeft:
+	addi $v0, $0, -1
+	nop
+	
+	
+	
+	jr	$ra
+	nop
+	
+	add	$v1, $0, $0			#Branch Delay
+	nop
+	
+	
+	
    
    
                      
