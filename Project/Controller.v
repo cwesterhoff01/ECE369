@@ -49,6 +49,9 @@ always @(*) begin
         6'b101001: begin //sh
              ControlBits2 = {2'b01,1'b1,1'b0,1'b0};
         end
+        default: begin
+            ControlBits2 = {2'b00,1'b0,1'b1,1'b1};
+        end
     endcase
 	case(Instruction[31:26])
 		6'b000000: begin
@@ -993,6 +996,7 @@ always @(*) begin
 			ALUOp = 5'b00000;*/
 			Jump = 2'b00;
             PCSrc = 0;
+            branch = 0;
             ControlBits = {1'b0,5'b00000,1'b0,1'b0};
 		end
 	endcase

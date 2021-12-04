@@ -116,12 +116,12 @@ module TopLevel(Clk,Rst,PCCheck,WriteDataCheck,HICheck,LOCheck);
 	wire [1:0] Jump,ForwardA,ForwardB,ForwardC,ForwardD,ForwardE;
 	wire [95:0] IFIDOut;
 	wire [268:0] IDEXOut;
-	wire [145:114] EXMEMOut;
-	wire [109:78] MEMWBOut;
+	wire [145:0] EXMEMOut;
+	wire [109:0] MEMWBOut;
     Mux32Bit2To1 branchMux(BranchAddress,PCAddResult,branch,branchMuxOutput);
-    Mux32Bit4To1 jumpMux(branchMuxOutput,{PCOutput[31:28],IFIDOut[89:64],2'b00},Jump,PCInput);
+    Mux32Bit4To1 jumpMux(branchMuxOutput,{PCOutput[31:28],IFIDOut[89:64],2'b00},ReadData1,{PCOutput[31:28],IFIDOut[89:64],2'b00},Jump,PCInput);
 	ProgramCounter PC(WritePC,PCInput,PCOutput,Clk,Rst);
-	Adder PCAdder(PCOutput,32'd4,PCAddResult);
+	Adder PCAdder(PCOutput,32'd8,PCAddResult);
 	InstructionMemory IM(PCOutput,Instruction1,Instruction2,Rst);
 	RegisterIFID IFID(WriteIFID,branch,{Instruction1,Instruction2,PCAddResult},IFIDOut,Clk,Rst);
 	RegisterFile RegFile(IFIDOut[89:85],IFIDOut[84:80],JALMux2Output,JALMux1Output,MEMWBOut[0],IFIDOut[57:53],IFIDOut[52:48],MEMWBOut[75:71],MEMWBOut[65:34],MEMWBOut[1],ReadData1,ReadData2,ReadData3,ReadData4,Clk,Rst);
@@ -148,12 +148,19 @@ module TopLevel(Clk,Rst,PCCheck,WriteDataCheck,HICheck,LOCheck);
 	
 	ALU alu1(ALU1Mux2Output,ALU1Mux3Output,IDEXOut[11:7],IDEXOut[243:239],HIOutput,LOOutput,ALUResult1,Zero1,Clk,Rst);
 	ALU alu2(ALU2MuxOutput,IDEXOut[236:205],5'b00001,5'b0,HIOutput2,LOOutput2,ALUResult2,Zero2,Clk,Rst);
-	
-	ForwardingUnit FU(EXMEMOut[0],MEMWBOut[0],MEMWBOut[1],branch,IFIDOut[89:85],IFIDOut[84:80],IDEXOut[248:244],IDEXOut[253:249],IDEXOut[263:259],EXMEMOut[106:102],MEMWBOut[70:66],MEMWBOut[75:71],ForwardA,ForwardB,ForwardC,ForwardD,ForwardE,Clk);
+  //ForwardingUnit(EXMEMRegWrite, MEMWBRegWrite, MEMWBMemToReg, branch, IFIDRs, IFIDRt,       IDEXRs,           IDEXRt,          IDEXRs2,        EXMEMRd,          MEMWBRd,        MEMWBRd2,       ForwardA,ForwardB,ForwardC,ForwardD,ForwardE)
+	ForwardingUnit FU(EXMEMOut[0],MEMWBOut[0],MEMWBOut[1],branch,IFIDOut[89:85],IFIDOut[84:80],IDEXOut[248:244],IDEXOut[253:249],IDEXOut[263:259],EXMEMOut[106:102],MEMWBOut[70:66],MEMWBOut[75:71],ForwardA,ForwardB,ForwardC,ForwardD,ForwardE);
 	
 	RegisterEXMEM EXMEM(1'b1,{IDEXOut[44:13],IDEXOut[238:237],IDEXOut[268:264],DestMuxOutput,ALUResult2,IDEXOut[140:109],ALUResult1,IDEXOut[5:0]},EXMEMOut,Clk,Rst);
-	DataMemory DM(EXMEMOut[3],EXMEMOut[101:70],EXMEMOut[69:38],EXMEMOut[2],,EXMEMOut[5:4],DataOutput,Clk,Rst);
+  //DataMemory(MemWrite,      Address,       WriteData,       MemRead,    AddressType,  ReadData, Clk, Rst)
+	DataMemory DM(EXMEMOut[3],EXMEMOut[101:70],EXMEMOut[69:38],EXMEMOut[2],EXMEMOut[5:4],DataOutput,Clk,Rst);
 	RegisterMEMWB MEMWB(1'b1,{EXMEMOut[145:114],EXMEMOut[113:112],EXMEMOut[111:107],EXMEMOut[106:102],DataOutput,EXMEMOut[37:6],EXMEMOut[1:0]},MEMWBOut,Clk,Rst);
 	Mux32Bit2To1 JALMux1(MEMWBOut[33:2],MEMWBOut[109:78],MEMWBOut[77]&MEMWBOut[76],JALMux1Output);
     Mux5Bit2To1 JALMux2(MEMWBOut[70:66],5'd31,MEMWBOut[77]&MEMWBOut[76],JALMux2Output);
+    always @(*) begin
+        PCCheck = PCOutput;
+        WriteDataCheck = JALMux1Output;
+        HICheck = HIOutput;
+        LOCheck = LOOutput;
+    end
 endmodule
