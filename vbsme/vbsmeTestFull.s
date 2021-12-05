@@ -417,14 +417,16 @@ vbsme:
 	add		$t7,$a1,$0	
 	lw      $t0, 0($a0)              #asize[0]
 	
+	sll		$t9, $t0, 2		
+    lw      $t3, 12($a0)             #asize[3]
+	
 	add		$t8,$a2,$0	
 	lw      $t2, 8($a0)              #asize[2]
 	
 	sub		$s3, $t0, $t2    #final x  
     lw      $t1, 4($a0)              #asize[1]
 	
-	sll		$t9, $t0, 2		
-    lw      $t3, 12($a0)             #asize[3]
+	
 	
 	
 	
@@ -603,6 +605,9 @@ SADColLoop:
 	add		$t0,$t0,$a2	
 	lw		$t6,0($t6)
 	
+	addi	$t5,$t5,1	
+	nop
+	
 	nop
 	lw		$t0,0($t0)	
 	
@@ -610,9 +615,6 @@ SADColLoop:
 	nop
 	
 	add		$v0,$v0,$t0	
-	nop
-	
-	addi	$t5,$t5,1	
 	nop
 	
 	

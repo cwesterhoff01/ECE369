@@ -6,8 +6,8 @@ module RegisterIFID(WriteReg,flush,NewData,Data,Clk,Rst);
     always @(posedge Clk or posedge Rst) begin
         if(Rst==1)
             Data <= 96'b0;
-        else if(WriteReg==1 && flush==1)
-            Data <= 96'b0;
+        //else if(WriteReg==1 && flush==1)
+        //    Data <= 96'b0;
         else if(WriteReg==1)
             Data <= NewData;
         else

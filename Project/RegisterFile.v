@@ -42,7 +42,7 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
         registers[5'b11110] <= 0;
         registers[5'b11111] <= 0;
 	end
-	always @ (negedge Clk) begin
+	always @ (*) begin
 		ReadData1 <= registers[ReadRegister1];
 		ReadData2 <= registers[ReadRegister2];
 		ReadData3 <= registers[ReadRegister3];
@@ -83,11 +83,11 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
             registers[5'b11110] <= 0;
             registers[5'b11111] <= 0;
         end
-        else if(RegWrite) begin
-            registers[WriteRegister] <= WriteData;
-        end
-        else if(RegWrite2) begin
-            registers[WriteRegister2] <= WriteData2;
+        else begin
+            if(RegWrite)
+                registers[WriteRegister] <= WriteData;
+            if(RegWrite2)
+                registers[WriteRegister2] <= WriteData2;
         end
     end
 endmodule
