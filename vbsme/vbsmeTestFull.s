@@ -249,6 +249,7 @@ window4:	.word 1, 1, 1, 1,
 	.word 1, 1, 1, 1,
 	.word 1, 1, 1, 1,
 
+asize5:		.word 1,2,2,2,
 .text
 la	$a0, asize
 nop
@@ -388,6 +389,35 @@ nop
 la	$a2, window4			#Branch Delay
 nop
 
+addi	$t0,$0,0
+nop
+addi	$t1,$0,10000
+nop
+loop5:
+addi	$t0,$t0,1
+nop
+
+
+
+bne	$t0, $t1, loop5
+nop
+nop					#Branch Delay
+nop
+
+
+
+la	$a0, asize5
+nop
+addi	$a1, $a0, 16  #Frame
+nop
+
+
+
+jal	vbsme
+nop
+addi	$a2, $a0, 16400			#Branch Delay  #window
+nop
+
 
 
 infinity: j infinity
@@ -408,23 +438,23 @@ vbsme:
 	addi	$sp,$sp,-4
 	nop
 	
-    addi      $v0, $0, 0   
-    sw		$ra,0($sp)
-	
-    addi      $v1, $0, 0
+	addi      $v1, $0, 0
 	nop
 	
 	add		$t7,$a1,$0	
-	lw      $t0, 0($a0)              #asize[0]
+	lw      $t1, 4($a0)              #asize[1]
 	
-	sll		$t9, $t0, 2		
-    lw      $t3, 12($a0)             #asize[3]
+    addi      $v0, $0, 0   
+    lw      $t0, 0($a0)             #asize[0]
 	
-	add		$t8,$a2,$0	
-	lw      $t2, 8($a0)              #asize[2]
+	sll		$t9, $t1, 2		
+   	lw      $t2, 8($a0)              #asize[2]
+	
+	add		$t8,$a2,$0
+	sw		$ra,0($sp)
 	
 	sub		$s3, $t0, $t2    #final x  
-    lw      $t1, 4($a0)              #asize[1]
+    lw      $t3, 12($a0)              #asize[3]
 	
 	
 	
@@ -564,12 +594,12 @@ notMin:
 	
 vbsmeEnd:
 	add		$v1,$s6,$0 # set the results to minX and minY
-	nop
-	
-	add		$v0,$s7,$0
 	lw		$ra,0($sp)
 	
-	
+	add		$v0,$s7,$0
+	nop
+
+
 	
 	jr	$ra
 	nop
@@ -605,16 +635,13 @@ SADColLoop:
 	add		$t0,$t0,$a2	
 	lw		$t6,0($t6)
 	
-	addi	$t5,$t5,1	
+	nop
 	nop
 	
-	nop
+	addi	$t5,$t5,1	
 	lw		$t0,0($t0)	
 	
 	subAbs		$t0,$t6,$t0
-	nop
-	
-	add		$v0,$v0,$t0	
 	nop
 	
 	
@@ -622,7 +649,7 @@ SADColLoop:
  blessthan 	$t5, $t3, SADColLoop 
 	nop
 	
-	nop					#Branch Delay
+	add		$v0,$v0,$t0			#Branch Delay
 	nop
 	
 	
@@ -689,7 +716,7 @@ moveWindow:
 	
 	evenRow:
 	
- blessthan $s1, $s3, moveRight
+ blessthan $s1, $s4, moveRight
 	nop
 	
 	nop			#Branch Delay

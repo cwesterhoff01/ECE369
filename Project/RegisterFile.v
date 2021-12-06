@@ -1,11 +1,11 @@
 `timescale 1ns / 1ps
-module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegWrite, ReadRegister3, ReadRegister4, WriteRegister2, WriteData2, RegWrite2, ReadData1, ReadData2, ReadData3, ReadData4, Clk,Rst);
+module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegWrite, ReadRegister3, ReadRegister4, WriteRegister2, WriteData2, RegWrite2, ReadData1, ReadData2, ReadData3, ReadData4, Clk,Rst,s6,s7);
 
 	/* Please fill in the implementation here... */
 	input [4:0] ReadRegister1, ReadRegister2, ReadRegister3, ReadRegister4, WriteRegister, WriteRegister2;
 	input [31:0] WriteData, WriteData2;
 	input RegWrite, RegWrite2, Clk,Rst;
-	output reg [31:0] ReadData1, ReadData2, ReadData3, ReadData4;
+	output reg [31:0] ReadData1, ReadData2, ReadData3, ReadData4,s6,s7;
 
 	reg [31:0] registers [0:31];
 	initial begin
@@ -47,6 +47,8 @@ module RegisterFile(ReadRegister1, ReadRegister2, WriteRegister, WriteData, RegW
 		ReadData2 <= registers[ReadRegister2];
 		ReadData3 <= registers[ReadRegister3];
 		ReadData4 <= registers[ReadRegister4];
+		s6 <= registers[5'b10110];
+		s7 <= registers[5'b10111];
 	end
 	always @ (posedge Clk or posedge Rst) begin
         if(Rst==1) begin

@@ -14,11 +14,10 @@
 
 module TopLevel_tb();
     reg Clk, Rst;
-    wire [31:0] PCCheck,DataCheck,HICheck,LOCheck;
+    wire [31:0] PCCheck,DataCheck;//,HICheck,LOCheck;
     
     TopLevel u0(
-    Clk,Rst,PCCheck,DataCheck,HICheck,LOCheck
-    );
+    Clk,Rst,PCCheck,DataCheck);//,HICheck,LOCheck);
     
     initial begin
         Clk <= 1'b1;
