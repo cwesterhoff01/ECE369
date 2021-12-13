@@ -779,16 +779,16 @@ print_result:
 
 # Begin subroutine
 vbsme:  
-	addi	$sp,$sp,-4
+#	addi	$sp,$sp,-4
 	sw		$ra,0($sp)
-    li      $v0, 0              # reset $v0 and $V1
-    li      $v1, 0
-	add		$t7,$a1,$0	# These are storing the inputs. They use t registers. 
+#    li      $v0, 0              # reset $v0 and $V1
+#    li      $v1, 0
+#	add		$t7,$a1,$0	# These are storing the inputs. They use t registers. 
 	add		$t8,$a2,$0	# These are acting like s registers here because t7,t8,and t9 are never used in SAD or moveWindow
-	lw      $t0, 0($a0)              #asize[0]
+#	lw      $t0, 0($a0)              #asize[0]
     lw      $t1, 4($a0)              #asize[1]
     lw      $t2, 8($a0)              #asize[2]
-    lw      $t3, 12($a0)             #asize[3]
+#    lw      $t3, 12($a0)             #asize[3]
 	# Get Final Location
     sub		$s3, $t0, $t2   #s3 is the last y value to check              
     sub		$s4, $t1, $t3   #s4 is the last x value to check
@@ -849,6 +849,12 @@ vbsmeEnd:
 #	t7, t8, and t9 are not changed from their initial values
 #   result (v0) SAD value for this section of the frame compared to the window
 SAD:
+	addi	$sp, $sp, -12
+	sw		$s0, 0($sp)
+	sw		$s1, 4($sp)
+	sw		$s2, 8($sp)
+	sw		$s3, 12($sp)
+	
 	addi	$v0,$0,0	# v0 = 0 to keep track of the current sum
 	lw		$t1,4($a0)	# t1 = D[1] numCols of F
 	lw		$t2,8($a0)	# t2 = D[2] numRows of W
@@ -878,6 +884,13 @@ skipAbs:
 	addi	$t4,$t4,1	# i++
 	slt		$t6,$t4,$t2	# while i<D[2], loop SADRowLoop
 	bne		$t6,$0,SADRowLoop #
+	
+	lw		$s0, 0($sp)
+	lw		$s1, 4($sp)
+	lw		$s2, 8($sp)
+	lw		$s3, 12($sp)
+	addi	$sp, $sp, 12
+	
 	jr		$ra			# Return v0
 	
 	
